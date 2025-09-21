@@ -1,1 +1,253 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TurboRace - Гоночные Ставки</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+            color: #786aea;
+        }
+        
+        .stats {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .stat-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        
+        .stat-value {
+            color: #786aea;
+            font-weight: bold;
+        }
+        
+        .race-track {
+            background: linear-gradient(90deg, #2c3e50, #34495e);
+            border: 3px solid #786aea;
+            border-radius: 10px;
+            height: 200px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .start-line {
+            position: absolute;
+            left: 20%;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 10px,
+                white 10px,
+                white 20px
+            );
+        }
+        
+        .start-text {
+            position: absolute;
+            left: 22%;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(120, 106, 234, 0.8);
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        
+        .track-lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 20px,
+                rgba(255, 255, 255, 0.3) 20px,
+                rgba(255, 255, 255, 0.3) 25px
+            );
+        }
+        
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #786aea, #5d4fd9);
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .btn:active {
+            transform: scale(0.95);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .navigation {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            color: white;
+            cursor: pointer;
+        }
+        
+        .bottom-nav {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 5px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 10px;
+        }
+        
+        .nav-item {
+            text-align: center;
+            padding: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .nav-item.active {
+            background: rgba(120, 106, 234, 0.3);
+        }
+        
+        .nav-item:active {
+            background: rgba(120, 106, 234, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏎️ TURBORACE</h1>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-row">
+                <span>35 ГИФТОВ</span>
+                <span class="stat-value">167.38 TON</span>
+            </div>
+            <div class="stat-row">
+                <span>Ожидание</span>
+                <span class="stat-value">00:30</span>
+            </div>
+        </div>
+        
+        <div class="race-track">
+            <div class="track-lines"></div>
+            <div class="start-line"></div>
+            <div class="start-text">СТАРТ</div>
+        </div>
+        
+        <div class="controls">
+            <button class="btn">Добавить Гифты</button>
+            <button class="btn btn-secondary">Добавить О ТON</button>
+        </div>
+        
+        <div class="navigation">
+            <button class="nav-btn">Игроков (1)</button>
+            <button class="nav-btn">PVP</button>
+            <button class="nav-btn">Rolls</button>
+        </div>
+        
+        <div class="bottom-nav">
+            <div class="nav-item">🎮</div>
+            <div class="nav-item">🎲</div>
+            <div class="nav-item active">🎯</div>
+            <div class="nav-item">🛒</div>
+            <div class="nav-item">💰</div>
+        </div>
+    </div>
 
+    <script>
+        let tg = window.Telegram.WebApp;
+        tg.expand();
+        tg.enableClosingConfirmation();
+        
+        console.log("TurboRace Mini App loaded!");
+    </script>
+<script>
+    let tg = window.Telegram.WebApp;
+    tg.expand();
+    tg.enableClosingConfirmation();
+    
+    // Принудительное обновление при каждом открытии
+    const version = '1.0';
+    console.log('TurboRace Mini App v' + version + ' loaded!');
+    
+    // Обновляем текст на кнопке
+    document.addEventListener('DOMContentLoaded', function() {
+        const raceButton = document.querySelector('.btn');
+        if (raceButton) {
+            raceButton.textContent = 'НАЧАТЬ ГОНКУ';
+            raceButton.addEventListener('click', function() {
+                alert('Гонка начинается! 🏎️');
+            });
+        }
+    });
+</script>
+</body>
+</html>
